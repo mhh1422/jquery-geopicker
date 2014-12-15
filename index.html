@@ -1,32 +1,113 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="jquery-geopicker.css" rel="stylesheet">
 
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=true"></script>
-        <script type="text/javascript" src="gmaps.js"></script>
-        <script type="text/javascript" src="jquery-geopicker.min.js"></script>
-    </head>
-    <body>
-        <input id="geolocation" onclick="$(this).next().click();" /><button onclick="showMap(this);">Map</button><br />
-        <input id="geolocation2" onclick="$(this).next().click();" /><button onclick="showMap(this);">Map</button><br />
-        <script>
-            function showMap(btn) {
-                var input = $(btn).prev();
-                $(input).geoPicker({
-                    insertAfter: btn,
-                    onPick: function (coords, e) {
-                        object = this;
-                        $(object).geoPicker('remove');
-                    }
-                });
-            }
-        </script>
-    </body>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Jquery Geolocation Picker (jquery-geopicker) : A quick geolocation picking jquery pluging">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Jquery Geolocation Picker (jquery-geopicker)</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mhh1422/jquery-geopicker">View on GitHub</a>
+
+          <h1 id="project_title">Jquery Geolocation Picker (jquery-geopicker)</h1>
+          <h2 id="project_tagline">A quick geolocation picking jquery pluging</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mhh1422/jquery-geopicker/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mhh1422/jquery-geopicker/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="what-is-this" class="anchor" href="#what-is-this" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is this</h1>
+
+<p>Simply, this is a small plugin that helps you to easily create Google maps HTML control to pickup a lat/lng value and populate it to a form/control.</p>
+
+<h1>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h1>
+
+<pre><code>&lt;input id="geolocation" /&gt;
+&lt;script&gt;
+$("#geolocation").geoPicker();
+&lt;/script&gt;
+</code></pre>
+
+<h1>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h1>
+
+<p>This plugin depends on the GMaps plugin (by Gustavo Leon), which in turn depends on jQuery and Google Maps.</p>
+
+<h1>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h1>
+
+<p>Copy and past the following lines. Modify the paths if needed (to match your project's path):</p>
+
+<pre><code>&lt;link href="jquery-geopicker.css" rel="stylesheet"&gt;
+&lt;script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=true"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="gmaps.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="jquery-geopicker.min.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<h1>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h1>
+
+<p>The plugin accepts (and passes) all the options that <a href="http://hpneo.github.io/gmaps/documentation.html">GMap accepts</a>. Few more options are:</p>
+
+<h3>
+<a id="addsearch" class="anchor" href="#addsearch" aria-hidden="true"><span class="octicon octicon-link"></span></a>addSearch</h3>
+
+<p>Boolean (false), whether to add search controls to the control or not.</p>
+
+<h3>
+<a id="apikey" class="anchor" href="#apikey" aria-hidden="true"><span class="octicon octicon-link"></span></a>apiKey</h3>
+
+<p>String, for reversed geocoding API from Google, this key will be used. You can ignore it if you are not going to do a reversed geocoding.</p>
+
+<h3>
+<a id="autofit" class="anchor" href="#autofit" aria-hidden="true"><span class="octicon octicon-link"></span></a>autoFit</h3>
+
+<p>Boolean (false), if enabled, it will automatically fit the map to the added marker on initialization.</p>
+
+<h3>
+<a id="class" class="anchor" href="#class" aria-hidden="true"><span class="octicon octicon-link"></span></a>class</h3>
+
+<p>String, a string of classes to be added to the outer container.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Jquery Geolocation Picker (jquery-geopicker) maintained by <a href="https://github.com/mhh1422">mhh1422</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-57683264-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
 </html>
