@@ -58,21 +58,6 @@
                                 }
                             });
                         }
-
-                        map.on('click', function (e) {
-                            if (marker) {
-                                map.removeMarker(marker);
-                            }
-                            marker = map.addMarker({
-                                title: options.pickedTitle,
-                                lat: e.latLng.lng(),
-                                lng: e.latLng.lat(),
-                                icon: options.chooseIcon,
-                            });
-                            map.setCenter(e.latLng.lng(), e.latLng.lat());
-                            options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e);
-                            inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
-                        });
                         $(this).data('geopicker', options).data('gmap', map).data('map', mapElement);
                         $(mapElement).data('input', inputElement);
 
@@ -87,6 +72,21 @@
                             map.fitZoom();
                             map.zoomOut(6);
                         }
+
+                        map.on('click', function (e) {
+                            if (marker) {
+                                map.removeMarker(marker);
+                            }
+                            marker = map.addMarker({
+                                title: options.pickedTitle,
+                                lng: e.latLng.lng(),
+                                lat: e.latLng.lat(),
+                                icon: options.chooseIcon,
+                            });
+                            map.setCenter(e.latLng.lat(), e.latLng.lng());
+                            options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e);
+                            inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
+                        });
 
                     }
                 });
