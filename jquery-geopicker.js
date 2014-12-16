@@ -72,13 +72,13 @@
                             }
                             marker = map.addMarker({
                                 title: options.pickedTitle,
-                                lat: e.latLng.k,
-                                lng: e.latLng.D,
+                                lat: e.latLng.lng(),
+                                lng: e.latLng.lat(),
                                 icon: options.chooseIcon,
                             });
-                            map.setCenter(e.latLng.k, e.latLng.D);
-                            options.onPick.call(inputElement, [e.latLng.D, e.latLng.k], e);
-                            inputElement.val(e.latLng.k + "," + e.latLng.D);
+                            map.setCenter(e.latLng.lng(), e.latLng.lat());
+                            options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e);
+                            inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
                         });
                         console.log(options.searchMarker);
                         $(this).data('geopicker', options).data('gmap', map).data('map', mapElement);
