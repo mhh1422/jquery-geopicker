@@ -13,13 +13,6 @@
                     callback: callback,
                 });
             },
-            geo2address: function (lat, long, callback) {
-                $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long + '&key=' + $.fn.geoPicker.defaults.apiKey, function (data) {
-                    if (data.hasOwnProperty('results') && data.results.length > 0) {
-                        $("#Address").val(data.results[0].formatted_address);
-                    }
-                });
-            }
         };
 
         switch (typeof param) {
@@ -80,7 +73,6 @@
                             options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e);
                             inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
                         });
-                        console.log(options.searchMarker);
                         $(this).data('geopicker', options).data('gmap', map).data('map', mapElement);
                         $(mapElement).data('input', inputElement);
 
@@ -157,7 +149,6 @@
         lng: 39.8262017,
         zoom: 8,
         autoFit: false,
-        apiKey: 'someapi',
         disableDefaultUI: false,
         streetViewControl: false,
         mapTypeControl: false,
