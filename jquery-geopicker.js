@@ -1,16 +1,33 @@
 (function ($) {
+    var setGeolocation;
 
     function vfunc() {
     }
     ;
 
-    $.fn.geoPicker = function (param, param2) {
+    $.fn.geoPicker = function (param, param2, param3, param4) {
 
         var _private = {
             address2geo: function (address, callback) {
                 GMaps.geocode({
                     address: address,
                     callback: callback,
+                });
+            },
+            setSearchMarker: function (gmap, marker, lat, lng, zoom) {
+                gmap.setCenter(lat, lng);
+                gmap.setZoom(zoom ? zoom : 6);
+                if (options.searchMarker)
+                    gmap.removeMarker(options.searchMarker);
+                options.searchMarker = gmap.addMarker({
+                    lat: lat,
+                    lng: lng,
+                    title: $(inputElement).data('geopicker').searchTitle,
+                    icon: $(inputElement).data('geopicker').searchIcon,
+                    click: function (e) {
+                        setGeolocation({latLng: e.position});
+                        gmap.removeMarker(options.searchMarker);
+                    }
                 });
             },
         };
@@ -49,7 +66,9 @@
                                 position: 'top_right',
                             });
                             $(mapElement).on('change', 'input.geopicker-search', doSearch);
-                            $(mapElement).on('click', 'button.geopicker-btn', doSearch);
+                            $(mapElement).on('click', 'button.geopicker-btn', function (e) {
+                                doSearch.call($(this).parent().children('input.geopicker-search').get(0));
+                            });
                             $(mapElement).on('keypress', 'input.geopicker-search', function (e) {
                                 if (e.keyCode == 13) {
                                     e.stopPropagation();
@@ -69,11 +88,12 @@
                                 icon: options.chooseIcon,
                             });
                             map.setCenter(point[0], point[1]);
-                            map.fitZoom();
-                            map.zoomOut(6);
                         }
 
-                        map.on('click', function (e) {
+                        setGeolocation = function (e) {
+                            if (options.hasOwnProperty('onPick') && typeof options.onPick == 'function' && options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e) === false) {
+                                return;
+                            }
                             if (marker) {
                                 map.removeMarker(marker);
                             }
@@ -84,9 +104,10 @@
                                 icon: options.chooseIcon,
                             });
                             map.setCenter(e.latLng.lat(), e.latLng.lng());
-                            options.onPick.call(inputElement, [e.latLng.lat(), e.latLng.lng()], e);
                             inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
-                        });
+                        };
+
+                        map.on('click', setGeolocation);
 
                     }
                 });
@@ -96,6 +117,9 @@
                     case 'gmap':
                         return $(this).first().data('gmap');
                         break;
+                    case 'set':
+                        setGeolocation({latLng: new google.maps.LatLng(param2, param3)});
+                        return this;
                     case 'options':
                         return $(this).first().data('geopicker');
                         break;
@@ -104,8 +128,11 @@
                         break;
                     case 'remove':
                         return this.each(function () {
-                            $(this).data('map').remove();
-                            $(this).removeData('geopicker').removeData('gmap').removeData('map');
+                            var cgmap = $(this).data('map');
+                            if (cgmap) {
+                                cgmap.remove();
+                                $(this).removeData('geopicker').removeData('gmap').removeData('map');
+                            }
                         });
                         break;
                     case 'search':
@@ -115,19 +142,27 @@
                             var gmap = $(inputElement).data('gmap');
                             _private.address2geo(param2, function (results, status) {
                                 if (status === 'OK') {
+                                    if (results.length === 0) {
+                                        return;
+                                    }
                                     var latlng = results[0].geometry.location;
-                                    gmap.setCenter(latlng.lat(), latlng.lng());
-                                    if (options.searchMarker)
-                                        gmap.removeMarker(options.searchMarker);
-                                    options.searchMarker = gmap.addMarker({
-                                        lat: latlng.lat(),
-                                        lng: latlng.lng(),
-                                        title: $(inputElement).data('geopicker').searchTitle,
-                                        icon: $(inputElement).data('geopicker').searchIcon,
-                                    });
+                                    _private.setSearchMarker(gmap, options.searchMarker, latlng.lat(), latlng.lng(), 10);
+                                    gmap.fitLatLngBounds([results[0].geometry.viewport.getNorthEast(), results[0].geometry.viewport.getSouthWest()]);
                                     $(inputElement).data('geopicker', options);
                                 }
                             });
+                        }
+                        return this;
+                        break;
+                    case 'suggest':
+                        inputElement = $(this).first();
+                        if ($(inputElement).data().hasOwnProperty('geopicker') && param2 && param3) {
+                            var options = $(inputElement).data('geopicker');
+                            var gmap = $(inputElement).data('gmap');
+                            lat = param2;
+                            lng = param3;
+                            _private.setSearchMarker(gmap, options.searchMarker, lat, lng, param4 ? param4 : 10);
+                            $(inputElement).data('geopicker', options);
                         }
                         return this;
                         break;
@@ -138,7 +173,7 @@
 
     $.fn.geoPicker.defaults = {
         template: "<div id=':id' style=':style' class='geopicker-container :class'></div>",
-        searchTemplate: "<input class='geopicker-search' placeholder=':searchPlaceholder' /><button class='geopicker-btn'>:searchLabel</button>",
+        searchTemplate: "<input class='geopicker-search' placeholder=':searchPlaceholder' /><button class='geopicker-btn' type='button'>:searchLabel</button>",
         searchLabel: "Search",
         searchPlaceholder: "Search",
         searchTitle: 'Search result',
@@ -147,8 +182,8 @@
         style: "height: 200px; width: 100%; position: relative;",
         lat: 21.4224843,
         lng: 39.8262017,
-        zoom: 8,
-        autoFit: false,
+        zoom: 12,
+        autoFit: true,
         disableDefaultUI: false,
         streetViewControl: false,
         mapTypeControl: false,
