@@ -88,6 +88,7 @@
                                 icon: options.chooseIcon,
                             });
                             map.setCenter(point[0], point[1]);
+                            $(this).data('marker', marker);
                         }
 
                         setGeolocation = function (e) {
@@ -105,6 +106,7 @@
                             });
                             map.setCenter(e.latLng.lat(), e.latLng.lng());
                             inputElement.val(e.latLng.lat() + "," + e.latLng.lng());
+                            inputElement.data('marker', marker);
                         };
 
                         map.on('click', setGeolocation);
@@ -166,6 +168,16 @@
                         }
                         return this;
                         break;
+                    case 'unsetGeolocation':
+                        var map = $(this).data('gmap'), marker = $(this).data('marker');
+                        if (map && marker) {
+                            map.removeMarker(marker);
+                            marker = null;
+                            $(this).removeData('marker');
+                        }
+                        return this;
+                        break;
+
                 }
                 break;
         }
